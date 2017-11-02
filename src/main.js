@@ -7,9 +7,7 @@
  */
 
 import Store from './store';
-import sanConnect from './connect/san'
-import emitDevtool from './devtool/devtool';
-
+import createConnector from './connect/createConnector';
 /**
  * 默认的全局 Store 实例
  * 通常我们认为在一个应用应该具有一个全局唯一的 store，管理整个应用状态
@@ -29,4 +27,7 @@ export let version = '1.0.1';
 
 export {Store};
 
-export let connect = {san: sanConnect};
+export let connect = {
+    san: createConnector(store),
+    createConnector
+};
