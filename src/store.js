@@ -211,7 +211,7 @@ export default class Store {
         }
         emitDevtool('store-dispatched', {
             store: this,
-            diff: updateInfo && updateInfo[1],
+            diff: updateInfo ? updateInfo[1] : null,
             name,
             payload,
             actionId,

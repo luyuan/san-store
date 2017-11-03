@@ -50,7 +50,7 @@ function connect(mapStates, mapActions, store, name) {
         mapActions,
         store,
         name,
-        isDefault: defaultStore == store
+        isDefault: defaultStore === store
     });
 
     return function (ComponentClass) {
@@ -124,7 +124,7 @@ function connect(mapStates, mapActions, store, name) {
 
             emitDevtool('store-comp-disposed', {
                 mapStates,
-                apActions,
+                mapActions,
                 store,
                 name,
                 component: this,
