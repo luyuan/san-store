@@ -8,7 +8,7 @@
 
  import emitSanDevtool from './san-devtool';
 
- export default function EmitDevtool() {
+ export default function emitDevtool() {
     emitSanDevtool.apply(null, arguments);
  }
  

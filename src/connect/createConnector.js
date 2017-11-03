@@ -8,6 +8,8 @@
 
 import parseName from '../parse-name';
 import Store from '../store';
+import {store as defaultStore} from '../main';
+import emitDevtool from '../devtool/emitter';
 
 /**
  * san组件的connect
@@ -17,7 +19,7 @@ import Store from '../store';
  * @param {Store} store 指定的store实例
  * @return {function(ComponentClass)}
  */
-function connect(mapStates, mapActions, store) {
+function connect(mapStates, mapActions, store, name) {
     let mapStateInfo = [];
 
     for (let key in mapStates) {
@@ -42,6 +44,14 @@ function connect(mapStates, mapActions, store) {
             mapInfo && mapStateInfo.push(mapInfo);
         }
     }
+
+    emitDevtool('store-connected', {
+        mapStates,
+        mapActions,
+        store,
+        name,
+        isDefault: defaultStore == store
+    });
 
     return function (ComponentClass) {
         let componentProto;
@@ -93,6 +103,15 @@ function connect(mapStates, mapActions, store) {
             };
             store.listen(this._storeListener);
 
+            emitDevtool('store-comp-inited', {
+                mapStates,
+                mapActions,
+                store,
+                name,
+                component: this,
+                isDefault: defaultStore === store
+            });
+
             if (typeof inited === 'function') {
                 inited.call(this);
             }
@@ -102,6 +121,15 @@ function connect(mapStates, mapActions, store) {
         componentProto.disposed = function () {
             store.unlisten(this._storeListener);
             this._storeListener = null;
+
+            emitDevtool('store-comp-disposed', {
+                mapStates,
+                apActions,
+                store,
+                name,
+                component: this,
+                isDefault: defaultStore === store
+            });
 
             if (typeof disposed === 'function') {
                 disposed.call(this);
@@ -219,9 +247,9 @@ function calcUpdateInfo(info, diff) {
  * @param {Store} store store实例
  * @return {Function}
  */
-export default function createConnector(store) {
+export default function createConnector(store, name) {
     if (store instanceof Store) {
-        return (mapStates, mapActions) => connect(mapStates, mapActions, store);
+        return (mapStates, mapActions) => connect(mapStates, mapActions, store, name);
     }
 
     throw new Error(store + ' must be an instance of Store!');

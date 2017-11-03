@@ -9,7 +9,7 @@
 
 import flattenDiff from './flatten-diff';
 import parseName from './parse-name';
-import emitDevtool from './devtool/devtool';
+import emitDevtool from './devtool/emitter';
 
 /**
  * 唯一id的起始值
@@ -84,8 +84,11 @@ export default class Store {
         if (typeof listener === 'function') {
             this.listeners.push(listener);
         }
+        // Alternatives for not receiving the events including default store
+        // info from connector.
         emitDevtool('store-listened', {
             store: this,
+            listener
         });
     }
 
@@ -101,8 +104,11 @@ export default class Store {
                 this.listeners.splice(len, 1);
             }
         }
+        // Alternatives for not receiving the events including default store
+        // info from connector.
         emitDevtool('store-unlistened', {
             store: this,
+            listener
         });
     }
 
